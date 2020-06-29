@@ -20,7 +20,7 @@ function playGame() {
 function init() {
     start = true;
     ball = {
-        x: 50,
+        x: 500,
         y: 50,
         w: 55,
         h: 55,
@@ -68,20 +68,32 @@ function bounce(timeFraction) {
     }
 };
 
+function quad(timeFraction) {
+    return Math.pow(timeFraction, 2);
+}
+
 function rebound() {
-    let to = canvas.height - ball.h;
+    let to = canvas.height - (ball.h + 200);
+    let width = 1200;
     animate({
-        duration: 2000,
+        duration: 3000,
         timing: makeEaseOut(bounce),
         draw(progress) {
-            ball.y = to * progress;
+            ball.y = to * progress + 200;
+        }
+    });
+    animate({
+        duration: 3000,
+        timing: makeEaseOut(quad),
+        draw: function (progress) {
+            ball.x = width * progress;
         }
     });
 };
 
 function animate(options) {
     let start = performance.now();
-    requestAnimationFrame(function animate(time) {
+    requestAnimationFrame(function animation(time) {
         // timeFraction от 0 до 1
         let timeFraction = (time - start) / options.duration;
         if (timeFraction > 1) timeFraction = 1;
@@ -92,10 +104,12 @@ function animate(options) {
         options.draw(progress);
 
         if (timeFraction < 1) {
-            requestAnimationFrame(animate);
+            requestAnimationFrame(animation);
         }
 
     });
 };
+
+
 
 window.onload = () => playGame(); 
