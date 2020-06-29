@@ -5,6 +5,8 @@ const ctx = canvas.getContext('2d');
 canvas.width = document.documentElement.clientWidth;
 canvas.height = document.documentElement.clientHeight;
 
+const ballImage = new Image();
+ballImage.src = 'images/ball.png';
 
 
 let start, anim;
@@ -25,11 +27,11 @@ function game() {
     }
 };
 function render(){
-
+    ctx.drawImage(ballImage, 100, 400, 55, 55);
 };
 function update(){
 
-}; //
+};
 
 
 
