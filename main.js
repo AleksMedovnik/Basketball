@@ -29,7 +29,7 @@ function init() {
         h: 55,
         dx: 10,
         dy: 5,
-        g: 1.06,
+        g: 0.8,
         start: false,
 
     };
@@ -80,14 +80,17 @@ function render() {
 
 function update() {
     if (ball.start) {
-
+        if (ball.dy < 0) {
+            ball.g = 1.3;
+        } else {
+            ball.g = 0.8;
+        }
         if (ball.y + ball.h >= platform.y) {
             ball.dy = -ball.dy;
-            ball.y += ball.dy;
-        } else {
-            ball.y += ball.dy;
-            ball.dy *= ball.g;
+            ball.g = 0.5;
         }
+        ball.y += ball.dy;
+        ball.dy += ball.g;
     }
 };
 
