@@ -22,14 +22,13 @@ function playGame() {
 function init() {
     start = true;
     ball = {
-        x: 50,
+        x: 350,
         y: 50,
-        // y: canvas.height - 105,
         w: 55,
         h: 55,
         dx: 10,
         dy: 5,
-        g: 0.8,
+        g: 0.3,
         start: false,
 
     };
@@ -45,7 +44,6 @@ function init() {
         w: 400,
         h: 200
     }
-    // document.addEventListener('click', rebound);
     document.addEventListener('click', rebound);
 
 };
@@ -80,17 +78,16 @@ function render() {
 
 function update() {
     if (ball.start) {
-        if (ball.dy < 0) {
-            ball.g = 1.3;
+        ball.g = (ball.dy < 0) ? 0.9 : 0.3;
+        if (ball.y + ball.h >= platform.y && ball.dy <= 4) {
+            ball.y = platform.y - ball.h;
         } else {
-            ball.g = 0.8;
+            if (ball.y + ball.h >= platform.y) {
+                ball.dy = -ball.dy;
+            }
+            ball.y += ball.dy;
+            ball.dy += ball.g;
         }
-        if (ball.y + ball.h >= platform.y) {
-            ball.dy = -ball.dy;
-            ball.g = 0.5;
-        }
-        ball.y += ball.dy;
-        ball.dy += ball.g;
     }
 };
 
@@ -99,64 +96,5 @@ function rebound() {
     ball.y = 50;
 };
 
-
-/* 
-function makeEaseOut(timing) {
-    return function (timeFraction) {
-        return 1 - timing(1 - timeFraction);
-    }
-};
-
-function bounce(timeFraction) {
-    for (let a = 0, b = 1; true; a += b, b /= 2) {
-        if (timeFraction >= (7 - 4 * a) / 11) {
-            return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2)
-        }
-    }
-};
-
-function quad(timeFraction) {
-    return Math.pow(timeFraction, 2);
-}
-
-function rebound() {
-    let to = canvas.height - (ball.h + 100);
-    let width = 1200;
-    animate({
-        duration: 3000,
-        timing: makeEaseOut(bounce),
-        draw(progress) {
-            ball.y = to * progress + 100;
-        }
-    });
-    animate({
-        duration: 3000,
-        timing: makeEaseOut(quad),
-        draw: function (progress) {
-            ball.x = width * progress;
-        }
-    });
-};
-
-function animate(options) {
-    let start = performance.now();
-    requestAnimationFrame(function animation(time) {
-        // timeFraction от 0 до 1
-        let timeFraction = (time - start) / options.duration;
-        if (timeFraction > 1) timeFraction = 1;
-
-        // текущее состояние анимации
-        let progress = options.timing(timeFraction)
-
-        options.draw(progress);
-
-        if (timeFraction < 1) {
-            requestAnimationFrame(animation);
-        }
-
-    });
-};
-
- */
 
 window.onload = () => playGame(); 
