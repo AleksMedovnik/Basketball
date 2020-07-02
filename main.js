@@ -11,7 +11,7 @@ const ringImage = new Image();
 ringImage.src = 'images/ring.png';
 
 
-let start, anim, ball, platform, ring;
+let start, anim, ball, platform, ring, thr;
 
 function playGame() {
     start = true;
@@ -29,7 +29,8 @@ function init() {
         dx: 10,
         dy: 5,
         g: 0.3,
-        start: false,
+        rebound: false,
+        throw: false,
 
     };
     platform = {
@@ -43,8 +44,14 @@ function init() {
         y: 100,
         w: 400,
         h: 200
+    };
+    thr = {
+        x: 0,
+        y: 0,
+        radius: 300,
+        degree: Math.PI / 8,
     }
-    document.addEventListener('click', rebound);
+    document.addEventListener('click', hit);
 
 };
 
@@ -77,7 +84,7 @@ function render() {
 };
 
 function update() {
-    if (ball.start) {
+    if (ball.rebound) {
         ball.g = (ball.dy < 0) ? 0.9 : 0.3;
         if (ball.y + ball.h >= platform.y && ball.dy <= 4) {
             ball.y = platform.y - ball.h;
@@ -88,12 +95,25 @@ function update() {
             ball.y += ball.dy;
             ball.dy += ball.g;
         }
+    };
+    if (ball.throw) {
+        ball.x = thr.x + Math.cos(thr.degree) * thr.radius;
+        ball.y = thr.y + Math.sin(thr.degree) * thr.radius;
     }
 };
 
-function rebound() {
-    ball.start = true;
-    ball.y = 50;
+function hit() {
+    if (event.clientX > ball.x && event.clientX < ball.x + ball.w && event.clientY > ball.y && event.y < ball.y + ball.h) {
+        ball.throw = true;
+        ball.rebound = false;
+        thr.x = ball.x - Math.cos(thr.degree) * thr.radius;
+        thr.y = ball.y - Math.sin(thr.degree) * thr.radius;
+    } else {
+        ball.rebound = true;
+        ball.throw = false;
+        ball.dy += 16;
+    }
+
 };
 
 
