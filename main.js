@@ -84,7 +84,7 @@ function render() {
 };
 
 function update() {
-    if (ball.x >= ring.x + 20) {
+    if (ball.x > ring.x + 20 && ball.y > ring.y + 145 && ball.y < ring.y + 150) {
         ball.rebound = true;
         ball.throw = false;
     }
