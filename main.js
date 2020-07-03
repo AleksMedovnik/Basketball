@@ -23,7 +23,7 @@ function init() {
     start = true;
     ball = {
         x: 350,
-        y: 50,
+        y: 250,
         w: 55,
         h: 55,
         dx: 10,
@@ -84,6 +84,11 @@ function render() {
 };
 
 function update() {
+    if (ball.x >= ring.x + 20) {
+        ball.rebound = true;
+        ball.throw = false;
+    }
+
     if (ball.rebound) {
         ball.g = (ball.dy < 0) ? 0.9 : 0.3;
         if (ball.y + ball.h >= platform.y && ball.dy <= 4) {
@@ -97,8 +102,9 @@ function update() {
         }
     };
     if (ball.throw) {
-        ball.x = thr.x + Math.cos(thr.degree) * thr.radius;
-        ball.y = thr.y + Math.sin(thr.degree) * thr.radius;
+        ball.x = thr.x - Math.cos(thr.degree) * thr.radius;
+        ball.y = thr.y - Math.sin(thr.degree) * thr.radius;
+        thr.degree += Math.PI / 90;
     }
 };
 
@@ -106,8 +112,8 @@ function hit() {
     if (event.clientX > ball.x && event.clientX < ball.x + ball.w && event.clientY > ball.y && event.y < ball.y + ball.h) {
         ball.throw = true;
         ball.rebound = false;
-        thr.x = ball.x - Math.cos(thr.degree) * thr.radius;
-        thr.y = ball.y - Math.sin(thr.degree) * thr.radius;
+        thr.x = ball.x + Math.cos(thr.degree) * thr.radius;
+        thr.y = ball.y + Math.sin(thr.degree) * thr.radius;
     } else {
         ball.rebound = true;
         ball.throw = false;
