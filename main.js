@@ -52,7 +52,7 @@ function init() {
         radius: 300,
         degree: Math.PI / 8,
     }
-    document.addEventListener('click', hit);
+    document.addEventListener('mousedown', hit);
 
 };
 
@@ -85,6 +85,10 @@ function render() {
 };
 
 function update() {
+    if (ball.x > ring.x + 25 && ball.y < ring.y + 155) {
+        ball.rebound = true;
+    }
+
     if (ball.x > ring.x + 20 && ball.y > ring.y + 145 && ball.y < ring.y + 150) {
         ball.fall = true;
         ball.throw = false;
@@ -106,7 +110,17 @@ function update() {
         ball.x = thr.x - Math.cos(thr.degree) * thr.radius;
         ball.y = thr.y - Math.sin(thr.degree) * thr.radius;
         thr.degree += Math.PI / 90;
-    }
+    };
+    if (ball.rebound) {
+        if (ball.x > 350) {
+            ball.fall = true;
+            ball.throw = false;
+            ball.x -= ball.dx;
+        } else {
+            ball.rebound = false;
+        }
+
+    };
 };
 
 function hit() {
@@ -119,6 +133,7 @@ function hit() {
         ball.fall = true;
         ball.throw = false;
         ball.dy += 16;
+        ball.degree = Math.PI / 8;
     }
 
 };
