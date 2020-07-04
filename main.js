@@ -31,6 +31,7 @@ function init() {
         g: 0.3,
         rebound: false,
         throw: false,
+        fall: false,
 
     };
     platform = {
@@ -85,11 +86,11 @@ function render() {
 
 function update() {
     if (ball.x > ring.x + 20 && ball.y > ring.y + 145 && ball.y < ring.y + 150) {
-        ball.rebound = true;
+        ball.fall = true;
         ball.throw = false;
     }
 
-    if (ball.rebound) {
+    if (ball.fall) {
         ball.g = (ball.dy < 0) ? 0.9 : 0.3;
         if (ball.y + ball.h >= platform.y && ball.dy <= 4) {
             ball.y = platform.y - ball.h;
@@ -111,11 +112,11 @@ function update() {
 function hit() {
     if (event.clientX > ball.x && event.clientX < ball.x + ball.w && event.clientY > ball.y && event.y < ball.y + ball.h) {
         ball.throw = true;
-        ball.rebound = false;
+        ball.fall = false;
         thr.x = ball.x + Math.cos(thr.degree) * thr.radius;
         thr.y = ball.y + Math.sin(thr.degree) * thr.radius;
     } else {
-        ball.rebound = true;
+        ball.fall = true;
         ball.throw = false;
         ball.dy += 16;
     }
