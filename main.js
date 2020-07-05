@@ -26,7 +26,7 @@ function init() {
         y: 250,
         w: 55,
         h: 55,
-        dx: 10,
+        dx: 4.5,
         dy: 5,
         g: 0.3,
         rebound: false,
@@ -51,6 +51,7 @@ function init() {
         y: 0,
         radius: 300,
         degree: Math.PI / 8,
+        coefRadius: 1 / 250, // забить мяч можно только при ball.y = 250
     }
     document.addEventListener('mousedown', hit);
 
@@ -85,7 +86,7 @@ function render() {
 };
 
 function update() {
-    if (ball.x > ring.x + 25 && ball.y < ring.y + 155) {
+    if (ball.x > ring.x + 55 && ball.y < ring.y + 155 && ball.y > ring.y + 50) {
         ball.rebound = true;
     }
 
@@ -127,6 +128,7 @@ function hit() {
     if (event.clientX > ball.x && event.clientX < ball.x + ball.w && event.clientY > ball.y && event.y < ball.y + ball.h) {
         ball.throw = true;
         ball.fall = false;
+        thr.radius /= ball.y * thr.coefRadius;
         thr.x = ball.x + Math.cos(thr.degree) * thr.radius;
         thr.y = ball.y + Math.sin(thr.degree) * thr.radius;
     } else {
