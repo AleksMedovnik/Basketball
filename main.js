@@ -86,7 +86,7 @@ function render() {
 };
 
 function update() {
-    if (ball.x > ring.x + 55 && ball.y < ring.y + 155 && ball.y > ring.y + 50) {
+    if (ball.x > ring.x + 55 && ball.y < ring.y + 155 && ball.y > ring.y + 50 || ball.x >= canvas.width - 50 && ball.y > ring.y + 155) {
         ball.rebound = true;
     }
 
@@ -108,6 +108,12 @@ function update() {
         }
     };
     if (ball.throw) {
+        if (ball.y + ball.h >= platform.y) {
+            ball.dy = 12;
+            ball.fall = true;
+
+            ball.throw = false;
+        }
         ball.x = thr.x - Math.cos(thr.degree) * thr.radius;
         ball.y = thr.y - Math.sin(thr.degree) * thr.radius;
         thr.degree += Math.PI / 90;
@@ -135,7 +141,8 @@ function hit() {
         ball.fall = true;
         ball.throw = false;
         ball.dy += 16;
-        ball.degree = Math.PI / 8;
+        thr.degree = Math.PI / 8;
+        thr.radius = 300;
     }
 
 };
