@@ -32,7 +32,7 @@ function init() {
         rebound: false,
         throw: false,
         fall: false,
-
+        rotate: 0
     };
     platform = {
         x: 0,
@@ -72,8 +72,22 @@ function render() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.restore();
 
+    // Scoreboard
+    ctx.fillRect(0, 0, 348, canvas.height);
+    ctx.save();
+    ctx.font = '24px serif';
+    ctx.fillStyle = 'rgba(51, 255, 229, 1)';
+    ctx.fillText('Click somewhere to jump the ball', 10, 50);
+    ctx.fillText('Click on the ball to make a throw', 10, 100);
+    ctx.restore();
+
     // ball
+    ctx.save();
+    ctx.translate(ball.x + ball.w / 2, ball.y + ball.h / 2);
+    ctx.rotate(-ball.rotate);
+    ctx.translate(-ball.x - ball.w / 2, -ball.y - ball.h / 2);
     ctx.drawImage(ballImage, ball.x, ball.y, ball.w, ball.h);
+    ctx.restore();
 
     // platform
     ctx.save();
@@ -123,6 +137,7 @@ function update() {
             ball.fall = true;
             ball.throw = false;
             ball.x -= ball.dx;
+            ball.rotate += Math.PI / 45;
         } else {
             ball.rebound = false;
         }
