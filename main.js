@@ -32,7 +32,8 @@ function init() {
         rebound: false,
         throw: false,
         fall: false,
-        rotate: 0
+        rotate: 0,
+        score: 0
     };
     platform = {
         x: 0,
@@ -79,6 +80,7 @@ function render() {
     ctx.fillStyle = 'rgba(51, 255, 229, 1)';
     ctx.fillText('Click somewhere to jump the ball', 10, 50);
     ctx.fillText('Click on the ball to make a throw', 10, 100);
+    ctx.fillText(`Score: ${ball.score}`, 10, 200);
     ctx.restore();
 
     // ball
@@ -100,15 +102,6 @@ function render() {
 };
 
 function update() {
-    if (ball.x > ring.x + 55 && ball.y < ring.y + 155 && ball.y > ring.y + 50 || ball.x >= canvas.width - 50 && ball.y > ring.y + 155) {
-        ball.rebound = true;
-    }
-
-    if (ball.x > ring.x + 20 && ball.y > ring.y + 145 && ball.y < ring.y + 150) {
-        ball.fall = true;
-        ball.throw = false;
-    }
-
     if (ball.fall) {
         ball.g = (ball.dy < 0) ? 0.9 : 0.3;
         if (ball.y + ball.h >= platform.y && ball.dy <= 4) {
@@ -122,11 +115,17 @@ function update() {
         }
     };
     if (ball.throw) {
-          ball.x = thr.x - Math.cos(thr.degree) * thr.radius;
-          ball.y = thr.y - Math.sin(thr.degree) * thr.radius;
-          thr.degree += Math.PI / 90;
-        
-
+        if (ball.x > ring.x + 30 && ball.y < ring.y + 155 && ball.y > ring.y + 50 || ball.x >= canvas.width - 50 && ball.y > ring.y + 155) {
+            ball.rebound = true;
+        }
+        if (ball.x > ring.x + 20 && ball.x < ring.x + 30 && ball.y > ring.y + 145 && ball.y < ring.y + 150) {
+            ball.fall = true;
+            ball.throw = false;
+            ball.score++;
+        }
+        ball.x = thr.x - Math.cos(thr.degree) * thr.radius;
+        ball.y = thr.y - Math.sin(thr.degree) * thr.radius;
+        thr.degree += Math.PI / 90;
     };
     if (ball.rebound) {
         if (ball.x > 350) {
@@ -146,11 +145,10 @@ function hit() {
         ball.throw = true;
         ball.fall = false;
         if (ball.y <= 250) {
-           thr.radius /= ball.y * thr.coefRadius;
+            thr.radius /= ball.y * thr.coefRadius;
         } else {
-           thr.radius *= ball.y * thr.coefRadius; 
+            thr.radius *= ball.y * thr.coefRadius;
         }
-        
         thr.x = ball.x + Math.cos(thr.degree) * thr.radius;
         thr.y = ball.y + Math.sin(thr.degree) * thr.radius;
     } else {
